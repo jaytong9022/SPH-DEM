@@ -1,0 +1,40 @@
+SUBROUTINE pdummy
+USE mdata
+DO I=1,50
+    P(DUMP(1)+I-1)=P(I)
+    P(DUMP(1)+I+190)=P(I)
+END DO
+
+DO I=142,191
+    P(DUMP(1)+I-1)=P(I)
+    P(DUMP(1)+I+190)=P(I)
+END DO
+
+DO I=283,332
+    P(DUMP(1)+I-1)=P(I)
+    P(DUMP(1)+I+190)=P(I)
+END DO
+
+DO I=424,473
+    P(DUMP(1)+I-1)=P(I)
+    P(DUMP(1)+I+190)=P(I)
+END DO
+
+DO I=51,141
+    IF(IFLAG(I)==3) THEN
+    P(DUMP(1)+I-1)=P(I)
+    P(DUMP(1)+I+190)=P(I)
+    P(DUMP(1)+I+381)=P(I)
+    P(DUMP(1)+I+572)=P(I)
+    ELSE IF(IFLAG(I)==2.AND.IFLAG(DUMP(1)+I-1)==3) THEN
+        P(DUMP(1)+I+190)=P(DUMP(1)+I-1)
+        P(DUMP(1)+I+381)=P(DUMP(1)+I-1)
+        P(DUMP(1)+I+572)=P(DUMP(1)+I-1)
+    ELSE IF(IFLAG(DUMP(1)+I-1)==2.AND.IFLAG(DUMP(1)+I+190)==3) THEN
+        P(DUMP(1)+I+381)=P(DUMP(1)+I+190)
+        P(DUMP(1)+I+572)=P(DUMP(1)+I+190)
+    ELSE
+    ENDIF
+END DO
+
+END SUBROUTINE pdummy
