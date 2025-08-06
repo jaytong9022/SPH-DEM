@@ -40,6 +40,11 @@
   call build_cell_list(ps)  
   call build_neighbor_list(ps)
   call compute_density(ps)
+  !--------------------------------- predictor-corrector step ---------------------------------
+  !----------------------------------1. predictor step-----------------------------------------
+  call compute_viscosity_acceleration(ps)
+  
+  
   
   open(unit=20, file='density.csv', status='replace')
   write(20, '(A)') 'id,x,y,z,rho,type'

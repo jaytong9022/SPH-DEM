@@ -35,6 +35,7 @@ subroutine compute_viscosity_acceleration(ps_)
   integer :: dim, idx2
   real(8) :: r2, dot, rho_avg
   real(8) :: eta2, v_diff(3)
+  real(8) :: vrec_temp(3), wg(3)
 
   eta2 = (0.01d0 * h)**2
   dim = merge(2, 3, is2D)
@@ -46,13 +47,14 @@ subroutine compute_viscosity_acceleration(ps_)
     do j = 1, ps_%particles(i)%neighbor_list%ncount
       idx2 = ps_%particles(i)%neighbor_list%pair(j)%j
       r2   = ps_%particles(i)%neighbor_list%pair(j)%r2
-
+      vrec_temp = ps_%particles(i)%neighbor_list%pair(j)%r_vec
+      wg = cubic_spline_grad(vrec_temp)
+      
       ! v_diff = v_j - v_i
       v_diff(1:dim) = ps_%particles(idx2)%v(1:dim) - ps_%particles(i)%v(1:dim)
-
+      
       ! dot(r_ij, ∇W)
-      dot = sum(ps_%particles(i)%neighbor_list%pair(j)%r_vec(1:dim) * &
-                cubic_spline_grad(ps_%particles(i)%neighbor_list%pair(j)%r_vec(1:dim)))
+      dot = sum(vrec_temp(1:dim) * wg(1:dim))
 
       rho_avg = 0.5d0 * (ps_%particles(i)%rho_0 + ps_%particles(idx2)%rho_0)
       if (rho_avg > 0.0d0 .and. r2 + eta2 > 0.0d0) then
